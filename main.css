@@ -1,0 +1,152 @@
+:root {
+    --cor-de-fundo: #f8f1d0;
+    --amarelo-escuro: #eac100;
+    --verde-claro: #0b8457;
+    --verde-escuro: #096c47;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: var(--verde-escuro);
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--cor-de-fundo);
+    margin-top: 2em;
+}
+
+.container {
+    max-width: 80vw;
+    width: 100%;
+    min-width: 380px;
+    margin: 0 auto;
+}
+
+header {
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+header h1 {
+    
+    font-family: 'Montserrat', sans-serif;
+    font-size: 56px;
+    font-weight: bold;
+}
+
+#userName {
+    display: inline-block;
+    background-color: var(--verde-claro);
+    color: var(--cor-de-fundo);
+    padding: .2em .6em;
+    border-radius: .5em;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+}
+
+form {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+form input, form button {
+    outline: var(--verde-escuro);
+    border-color: var(--verde-escuro);
+    padding: .4em;
+    border-radius: .5em;
+}
+
+form button {
+    background-color: var(--verde-escuro);
+    color: var(--cor-de-fundo);
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: var(--verde-claro);
+}
+
+
+form input::placeholder {
+    color: var(--verde-escuro);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+table {
+    background-color: var(--verde-claro);
+    border-radius: 1em;
+    padding: 1em;
+    min-width: 290px;
+    width: 50%;
+    margin: 1em auto;
+    text-align: center;
+}
+
+table thead th {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--cor-de-fundo);
+    border-bottom: 2px solid var(--cor-de-fundo);
+    padding: .3em;
+}
+
+table thead tr {
+    padding: 1em;
+}
+
+table tbody td {
+    padding: .3em 1em;
+    color: var(--cor-de-fundo);
+}
+
+#errormessage {
+    display: none;
+    color: var(--verde-escuro);
+    font-weight: bold;
+    justify-content: center;
+    width: 50%;
+    margin: 0 auto;
+    margin-bottom: 1em;
+    text-align: center;
+    padding: .5em;
+    background-color: var(--amarelo-escuro);
+    border-radius: .5em;
+    
+}
+
+#contactList {
+    text-transform: uppercase;
+}
+
+.lastAddedContact {
+    background-color: var(--amarelo-escuro);
+    padding: 1em;
+    border-radius: 1em;   
+}
+
+.lastAddedContact td {
+    min-width: 25vw;
+    font-weight: bold;
+    color: var(--verde-escuro);
+}

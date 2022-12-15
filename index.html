@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Book</title>
+
+    <link rel="stylesheet" href="./main.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        
+        <header>
+            <h1>Agenda de Contatos</h1>
+            <p id="userName">Bem-vindo(a)</p>
+        </header>
+
+        <form action="">
+            <input id="name" type="text" required placeholder="Nome do Contato">
+            <input id="number" type="number" required placeholder="Telefone">
+            <button id="submitButton" type="submit">Adicionar</button>
+        </form>
+        
+        <p id="errormessage" class="efeito-grow"></p>
+
+        <table cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                </tr>
+            </thead>
+            
+            <tbody id="bodyTable">
+            </tbody>
+        </table>
+    </div>
+    <script src="./main.js"></script>
+</body>
+</html>
