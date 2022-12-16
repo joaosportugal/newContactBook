@@ -1,17 +1,66 @@
-const submitButton = document.getElementById('submitButton');
-const bodyTable = document.getElementById('bodyTable');
-let names = [];
-let numbers = [];
+// let names = [];
+// let numbers = [];
+
+function getValue (fieldName) {
+    return document.getElementById(fieldName).value;
+}
+
+function run() {
+    const submitButton = document.getElementById('submitButton');
+    // const bodyTable = document.getElementById('bodyTable');
+
+    // function validate(name, number) {
+
+    // }
+
+    function renderTable(contacts) {
+        const contactList = document.getElementById('bodyTable');
+        contactList.innerHTML = "";
+        contacts.forEach(
+            ({ name, number }) => {
+                contactList.innerHTML += 
+                    `<tr>
+                        <td>${name}</td>
+                        <td>${number}</td>
+                    </tr>`;
+            }
+        )
+    }
+
+    function readFormAndAddNewLine(){
+        // const name = getValue('name');
+        // const number = getValue('number');
+        // const validationResults = validate(name, number);
+        // error = { fieldName: null, message: 'Esse contato já existe'}
+        // error = { fieldName: 'name', message: 'Já existe um contato com esse nome ....'}
+        // // fieldName:name|null message
+        // console.log({ name, number });
+        const contacts = [
+            {name: "João", number: "1111111"},
+            {name: "Bruno", number: "22222222"},
+            {name: "Paulo", number: "3333333"},
+        ];
+        renderTable(contacts)
+
+    
+        // document.getElementById('name').value = "";
+        // document.getElementById('number').value = "";
+    }
+     
+    //console.log(submitButton);
+    submitButton.addEventListener('click', readFormAndAddNewLine)
+}
+
+run();
 
 
-submitButton.addEventListener('click', function(e){
-    e.preventDefault();
 
-    getContact(names, numbers);
 
-    document.getElementById('name').value = "";
-    document.getElementById('number').value = "";
-})
+
+
+
+
+
 
 function printContact(names, numbers) {
     const contactList = document.getElementById('bodyTable');
@@ -30,8 +79,8 @@ function printContact(names, numbers) {
 }
 
 function getContact(names, numbers) {
-    const name = document.getElementById('name');
-    const number = document.getElementById('number');
+    // const name = document.getElementById('name');
+    // const number = document.getElementById('number');
     const errorMessage = document.getElementById('errormessage');
     switch(true) {
         // contato igual
