@@ -5,13 +5,32 @@ function getValue (fieldName) {
     return document.getElementById(fieldName).value;
 }
 
-function run() {
-    const submitButton = document.getElementById('submitButton');
-    // const bodyTable = document.getElementById('bodyTable');
 
-    // function validate(name, number) {
+(function run() {
 
-    // }
+    let contacts = [];
+
+    function validate(contacts, formName, formNumber) {
+        const errors = [];
+        const isEqual = ({name, number})=> {
+            name == formName && number == formNumber  
+        }
+        const existingContact = contacts.map(isEqual)
+        if(existingContact) {
+            errors.push('Esse contato já existe')
+        }
+        return errors;
+        // console.log({ existingContact })
+    }
+    
+
+    function loadContacts() {
+        contacts = [
+            {name: "João", number: "1111111"},
+            {name: "Bruno", number: "22222222"},
+            {name: "Paulo", number: "3333333"},
+        ];
+    }
 
     function renderTable(contacts) {
         const contactList = document.getElementById('bodyTable');
@@ -27,31 +46,35 @@ function run() {
         )
     }
 
-    function readFormAndAddNewLine(){
-        // const name = getValue('name');
-        // const number = getValue('number');
-        // const validationResults = validate(name, number);
-        // error = { fieldName: null, message: 'Esse contato já existe'}
-        // error = { fieldName: 'name', message: 'Já existe um contato com esse nome ....'}
+    function readFormAndAddNewLine(a,b,c){
+        
+        const name = getValue('name');
+        const number = getValue('number');
+        
+        const validationResults = validate(contacts, name, number);
+        console.log(validationResults)
+        // error = { message: 'Esse contato já existe'}
+        // error = { message: 'Já existe um contato com esse nome ....'}
         // // fieldName:name|null message
         // console.log({ name, number });
-        const contacts = [
-            {name: "João", number: "1111111"},
-            {name: "Bruno", number: "22222222"},
-            {name: "Paulo", number: "3333333"},
-        ];
-        renderTable(contacts)
-
-    
+        
+        // renderTable(contacts)
         // document.getElementById('name').value = "";
         // document.getElementById('number').value = "";
+        return () => console.log('isso')
     }
-     
-    //console.log(submitButton);
-    submitButton.addEventListener('click', readFormAndAddNewLine)
-}
 
-run();
+    function addSubmitButtonListener(contacts) {
+        const submitButton = document.getElementById('submitButton');
+        submitButton.addEventListener('click', readFormAndAddNewLine);
+    }
+
+    loadContacts();
+    renderTable(contacts);
+    addSubmitButtonListener();
+    
+})();
+
 
 
 
