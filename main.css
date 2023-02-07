@@ -150,3 +150,9 @@ table tbody td {
     font-weight: bold;
     color: var(--verde-escuro);
 }
+
+.repeatedData {
+    color: var(--verde-escuro);
+    background-color: var(--amarelo-escuro);
+    font-weight: bold;
+}
