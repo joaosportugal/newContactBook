@@ -151,7 +151,7 @@ table tbody td {
     color: var(--verde-escuro);
 }
 
-.repeatedData {
+.highlight {
     color: var(--verde-escuro);
     background-color: var(--amarelo-escuro);
     font-weight: bold;

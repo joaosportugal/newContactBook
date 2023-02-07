@@ -1,62 +1,59 @@
+let contacts = [];
+
 function getValue (fieldName) {
     return document.getElementById(fieldName).value;
 }
 
+function highlight(indexContact, repeatedData) {
+    const contactList = document.querySelectorAll('.contact');
+    const repeatedContact = contactList[indexContact];
+    const repeatedName = repeatedContact.querySelector('.name');
+    const repeatedNumber = repeatedContact.querySelector('.number');
 
-(function run() {
+    if (repeatedData == 'bothEqual') {
+        repeatedName.classList.add('highlight');
+        repeatedNumber.classList.add('highlight');
+    } else if (repeatedData == 'sameName') {
+        repeatedName.classList.add('highlight');
+    } else if (repeatedData == 'sameNumber') {
+        repeatedNumber.classList.add('highlight');
+    }
 
-    let contacts = [];
+};
 
-    function validate(contacts, formName, formNumber) {
+function undoHighlight() {
+    const highlighted = document.querySelectorAll('.highlight');
+    highlighted.forEach(element => element.classList.remove('highlight'));
+};
 
-        const errors = [];
-        const bothEqual = ({name, number}) => name == formName && number == formNumber
-        const sameName = ({name, number}) => name == formName && number != formNumber
-        const sameNumber = ({name, number}) => name != formName && number == formNumber
-        const highlighted = document.querySelectorAll('.repeatedData');
-        highlighted.forEach(element => element.classList.remove('repeatedData'));
+function validate(contacts, formName, formNumber) {
 
-        function highlightContact(caseOfRepeatedData) {
-            const indexOfRepeatedData = contacts.findIndex(caseOfRepeatedData);
-            const existingContact = document.querySelectorAll('.contact');
-            const repeatedData = existingContact[indexOfRepeatedData];
-            const repeatedName = repeatedData.querySelector('.name');
-            const repeatedNumber = repeatedData.querySelector('.number');
-
-            repeatedName.classList.remove('repeatedData');
-            repeatedNumber.classList.remove('repeatedData');
-
-            if (contacts.find(bothEqual)) {
-
-                repeatedName.classList.add('repeatedData');
-                repeatedNumber.classList.add('repeatedData');
-
-            } else if(contacts.find(sameName)) {
-
-                repeatedName.classList.add('repeatedData');
-                repeatedNumber.classList.remove('repeatedData');
-
-            } else if (contacts.find(sameNumber)) {
-
-                repeatedName.classList.remove('repeatedData');
-                repeatedNumber.classList.add('repeatedData');
-
-            }
-        }
+    const errors = [];
+    const bothEqual = ({name, number}) => name == formName && number == formNumber
+    const sameName = ({name, number}) => name == formName && number != formNumber
+    const sameNumber = ({name, number}) => name != formName && number == formNumber
+    const getIndex = repeatedData => contacts.findIndex(repeatedData);
+    
 
         if (contacts.find(bothEqual)) {
-            highlightContact(bothEqual);
+            undoHighlight();
+            highlight(getIndex(bothEqual), 'bothEqual');
             errors.push('Esse contato já existe');
         } else if(contacts.find(sameName)) {
-            highlightContact(sameName);
+            undoHighlight();
+            highlight(getIndex(sameName), 'sameName');
             errors.push('Esse nome já existe');
         } else if (contacts.find(sameNumber)) {
-            highlightContact(sameNumber);
+            undoHighlight();
+            highlight(getIndex(sameNumber), 'sameNumber');
             errors.push('Esse número já existe');
+        } else {
+            undoHighlight();
         }
         return errors;
         
-    }
+}
+
     
     function loadContacts() {
         contacts = [
@@ -98,7 +95,7 @@ function getValue (fieldName) {
         const number = getValue('number');
         const validationResults = validate(contacts, name, number);
         const hasValidationError = validationResults.length > 0;
-        hasValidationError ? showErrorMessages(validationResults) : addNewLine(contacts, name, number)
+        hasValidationError ? showErrorMessages(validationResults) : addNewLine(contacts, name, number);
     }
 
     function addSubmitButtonListener(contacts) {
@@ -109,5 +106,3 @@ function getValue (fieldName) {
     loadContacts();
     renderTable(contacts);
     addSubmitButtonListener();
-    
-})();
