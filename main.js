@@ -1,25 +1,23 @@
 let contacts = [];
 
-function getValue (fieldName) {
+function getValue(fieldName) {
     return document.getElementById(fieldName).value;
 }
 
-function highlight(indexContact, repeatedData) {
-    const contactList = document.querySelectorAll('.contact');
-    const repeatedContact = contactList[indexContact];
-    const repeatedName = repeatedContact.querySelector('.name');
-    const repeatedNumber = repeatedContact.querySelector('.number');
-
-    if (repeatedData == 'bothEqual') {
-        repeatedName.classList.add('highlight');
-        repeatedNumber.classList.add('highlight');
-    } else if (repeatedData == 'sameName') {
-        repeatedName.classList.add('highlight');
-    } else if (repeatedData == 'sameNumber') {
-        repeatedNumber.classList.add('highlight');
-    }
-
-};
+function highlight() {
+    const existingNames = document.querySelectorAll('.name');
+    const existingNumbers = document.querySelectorAll('.number');
+    existingNames.forEach(existingName => {
+        if (existingName.innerHTML === getValue('name')) {
+            existingName.classList.add('highlight');
+        } 
+    })
+    existingNumbers.forEach(existingNumber => {
+        if (existingNumber.innerHTML === getValue('number')) {
+            existingNumber.classList.add('highlight');
+        }
+    }) 
+}
 
 function undoHighlight() {
     const highlighted = document.querySelectorAll('.highlight');
@@ -32,20 +30,19 @@ function validate(contacts, formName, formNumber) {
     const bothEqual = ({name, number}) => name == formName && number == formNumber
     const sameName = ({name, number}) => name == formName && number != formNumber
     const sameNumber = ({name, number}) => name != formName && number == formNumber
-    const getIndex = repeatedData => contacts.findIndex(repeatedData);
     
 
         if (contacts.find(bothEqual)) {
             undoHighlight();
-            highlight(getIndex(bothEqual), 'bothEqual');
+            highlight();
             errors.push('Esse contato já existe');
         } else if(contacts.find(sameName)) {
             undoHighlight();
-            highlight(getIndex(sameName), 'sameName');
+            highlight();
             errors.push('Esse nome já existe');
         } else if (contacts.find(sameNumber)) {
             undoHighlight();
-            highlight(getIndex(sameNumber), 'sameNumber');
+            highlight();
             errors.push('Esse número já existe');
         } else {
             undoHighlight();
@@ -106,3 +103,4 @@ function validate(contacts, formName, formNumber) {
     loadContacts();
     renderTable(contacts);
     addSubmitButtonListener();
+
