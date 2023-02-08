@@ -120,8 +120,8 @@ table tbody td {
     color: var(--cor-de-fundo);
 }
 
-#errormessage {
-    display: none;
+.errormessage {
+    display: flex;
     color: var(--verde-escuro);
     font-weight: bold;
     justify-content: center;
@@ -133,6 +133,11 @@ table tbody td {
     background-color: var(--amarelo-escuro);
     border-radius: .5em;
     
+}
+
+#nameErrorMessage,
+#numberErrorMessage {
+    display: none;
 }
 
 #contactList {
