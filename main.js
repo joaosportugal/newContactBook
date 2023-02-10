@@ -4,44 +4,62 @@ function getValue(fieldName) {
     return document.getElementById(fieldName).value;
 }
 
-function highlight() {
-    const existingNames = document.querySelectorAll('.name');
-    const existingNumbers = document.querySelectorAll('.number');
-    existingNames.forEach(existingName => {
-        if (existingName.innerHTML === getValue('name')) {
-            existingName.classList.add('highlight');
+// function highlight() {
+//     const existingNames = document.querySelectorAll('.name');
+//     const existingNumbers = document.querySelectorAll('.number');
+//     existingNames.forEach(existingName => {
+//         if (existingName.innerHTML === getValue('name')) {
+//             existingName.classList.add('highlight');
+//         }
+//     })
+//     existingNumbers.forEach(existingNumber => {
+//         if (existingNumber.innerHTML === getValue('number')) {
+//             existingNumber.classList.add('highlight');
+//         }
+//     })
+// }
+
+// function undoHighlight() {
+//     const highlighted = document.querySelectorAll('.highlight');
+//     highlighted.forEach(element => element.classList.remove('highlight'));
+// };
+
+function highlight(contacts, inputInvalid) {
+    const name = getValue('name');
+    const number = getValue('number');
+    
+    for (const contact in contacts) {
+        if (contacts[contact].name === inputInvalid.name) {
+            console.log(contacts[contact]);
+        } 
+        if (contacts[contact].number === inputInvalid.number) {
+            console.log(contacts[contact].number);
         }
-    })
-    existingNumbers.forEach(existingNumber => {
-        if (existingNumber.innerHTML === getValue('number')) {
-            existingNumber.classList.add('highlight');
-        }
-    })
+    }
 }
 
-function undoHighlight() {
-    const highlighted = document.querySelectorAll('.highlight');
-    highlighted.forEach(element => element.classList.remove('highlight'));
-};
-
 function validate(contacts, formName, formNumber) {
+    const validationMessages = {};
+    const inputInvalid = {};
+    const validationResult = {inputInvalid, validationMessages};
+    const sameName = contacts.find(({ name }) => name == formName);
+    const sameNumber = contacts.find(({ number }) => number == formNumber);
 
-    const errors = { name: 0, number: 0 };
-    const sameName = ({ name }) => name == formName
-    const sameNumber = ({ number }) => number == formNumber
-
-    if (contacts.find(sameName)) {
-        undoHighlight();
-        highlight();
-        errors.name = 'Esse nome já existe';
+    if (sameName === undefined && sameNumber === undefined) {
+        contacts.push({name: formName, number: formNumber});
+        renderTable(contacts);
+        validationMessages.success = `O novo contato foi adicionado`;
+    } 
+    if (sameName !== undefined) {
+        validationMessages.nameError = `O nome ${formName} já existe`;
+        inputInvalid.name = formName;
     }
-    if (contacts.find(sameNumber)) {
-        undoHighlight();
-        highlight();
-        errors.number = 'Esse número já existe';
+    if (sameNumber !== undefined) {
+        validationMessages.numberError = `O número ${formNumber} já existe`;
+        inputInvalid.number = formNumber;
     }
-    return errors
 
+    return validationResult
 }
 
 function loadContacts() {
@@ -66,50 +84,37 @@ function renderTable(contacts) {
     )
 }
 
-function addNewLine(contacts, name, number) {
-    cleanErrorMessages();
-    contacts.push({ name, number });
-    renderTable(contacts);
-}
-
-function cleanErrorMessages() {
-    const nameErrorMessage = document.getElementById('nameErrorMessage');
-    const numberErrorMessage = document.getElementById('numberErrorMessage');
-    nameErrorMessage.style.display = 'none';
-    numberErrorMessage.style.display = 'none';
-}
-
-function showErrorMessages(nameValidationResult, numberValidationResult) {
-    cleanErrorMessages();
-    const nameErrorMessage = document.getElementById('nameErrorMessage');
-    const numberErrorMessage = document.getElementById('numberErrorMessage');
-
-    if (nameValidationResult != 0) {
-        nameErrorMessage.innerHTML = nameValidationResult
-        nameErrorMessage.style.display = 'flex';
-    }
-    if (numberValidationResult != 0) {
-        numberErrorMessage.innerHTML = numberValidationResult;
-        numberErrorMessage.style.display = 'flex';
-    }
-}
-
-function readFormAndAddNewLine() {
+function printMessages() {
+    undoPrintMessages();
     const name = getValue('name');
     const number = getValue('number');
-    const validationResults = validate(contacts, name, number);
-    const nameValidationResult = validationResults.name
-    const numberValidationResult = validationResults.number
-    const hasValidationError = (nameValidationResult != 0 || numberValidationResult != 0);
-    hasValidationError ? showErrorMessages(nameValidationResult, numberValidationResult) : addNewLine(contacts, name, number);
+    const messages = validate(contacts, name, number).validationMessages;
+    const invalidData = validate(contacts, name, number).inputInvalid;
+    const messagesDisplay = document.getElementById('messagesDisplay');
+
+    highlight(contacts, invalidData);
+
+    for (const message in messages) {
+        // console.log(messages[message]);
+        messagesDisplay.innerHTML += `<p class="message">${messages[message]}</p>`
+    }
+}
+
+function undoPrintMessages() {
+    const messagesDisplay = document.getElementById('messagesDisplay');
+    while (messagesDisplay.firstChild) {
+        messagesDisplay.removeChild(messagesDisplay.firstChild);
+    }
 }
 
 function addSubmitButtonListener(contacts) {
     const submitButton = document.getElementById('submitButton');
-    submitButton.addEventListener('click', readFormAndAddNewLine);
+    submitButton.addEventListener('click', printMessages);
 }
 
 loadContacts();
 renderTable(contacts);
 addSubmitButtonListener();
+
+
 
