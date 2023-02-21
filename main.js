@@ -4,62 +4,53 @@ function getValue(fieldName) {
     return document.getElementById(fieldName).value;
 }
 
-// function highlight() {
-//     const existingNames = document.querySelectorAll('.name');
-//     const existingNumbers = document.querySelectorAll('.number');
-//     existingNames.forEach(existingName => {
-//         if (existingName.innerHTML === getValue('name')) {
-//             existingName.classList.add('highlight');
-//         }
-//     })
-//     existingNumbers.forEach(existingNumber => {
-//         if (existingNumber.innerHTML === getValue('number')) {
-//             existingNumber.classList.add('highlight');
-//         }
-//     })
-// }
+function validate(contacts, formName, formNumber) {
+    contacts = Array.from(contacts);
+    const allNames = contacts.map(contact => contact.name)
+    const allNumber = contacts.map(contact => contact.number)
+    const invalidName = allNames.filter(name => name === formName);
+    const invalidNumber = allNumber.filter(number => number === formNumber);
+    const validationResult = {};
+    if (invalidName.length) {
+        validationResult.invalidName = invalidName[0];
+    }
+    if (invalidNumber.length) {
+        validationResult.invalidNumber = invalidNumber[0];
+    }
+    return validationResult
+}
 
-// function undoHighlight() {
-//     const highlighted = document.querySelectorAll('.highlight');
-//     highlighted.forEach(element => element.classList.remove('highlight'));
-// };
-
-function highlight(contacts, inputInvalid) {
+function readValidationResultAndRun() {
+    undoPrintMessage();
+    renderTable(contacts);
     const name = getValue('name');
     const number = getValue('number');
-    
-    for (const contact in contacts) {
-        if (contacts[contact].name === inputInvalid.name) {
-            console.log(contacts[contact]);
-        } 
-        if (contacts[contact].number === inputInvalid.number) {
-            console.log(contacts[contact].number);
+    const validationResult = validate(contacts, name, number);
+    const invalidName = validationResult.invalidName;
+    const invalidNumber = validationResult.invalidNumber;
+    if (Object.keys(validationResult).length > 0) {
+        if (invalidName && invalidNumber) {
+            printMessage(`O nome ${invalidName} já existe`);
+            printMessage(`O número ${invalidNumber} já existe`);
+            highlight(invalidName);
+            highlight(invalidNumber);
+        } else if (invalidName) {
+            printMessage(`O nome ${invalidName} já existe`);
+            highlight(invalidName);
+        } else if (invalidNumber) {
+            printMessage(`O número ${invalidNumber} já existe`);
+            highlight(invalidNumber);
         }
+    } else {
+        addContact(name, number);
+        printMessage('O contato foi adicionado com sucesso');
+        renderTable(contacts);
     }
 }
 
-function validate(contacts, formName, formNumber) {
-    const validationMessages = {};
-    const inputInvalid = {};
-    const validationResult = {inputInvalid, validationMessages};
-    const sameName = contacts.find(({ name }) => name == formName);
-    const sameNumber = contacts.find(({ number }) => number == formNumber);
-
-    if (sameName === undefined && sameNumber === undefined) {
-        contacts.push({name: formName, number: formNumber});
-        renderTable(contacts);
-        validationMessages.success = `O novo contato foi adicionado`;
-    } 
-    if (sameName !== undefined) {
-        validationMessages.nameError = `O nome ${formName} já existe`;
-        inputInvalid.name = formName;
-    }
-    if (sameNumber !== undefined) {
-        validationMessages.numberError = `O número ${formNumber} já existe`;
-        inputInvalid.number = formNumber;
-    }
-
-    return validationResult
+function addContact(formName, formNumber) {
+    const newContact = {name: formName, number: formNumber}
+    contacts.push(newContact);
 }
 
 function loadContacts() {
@@ -82,39 +73,56 @@ function renderTable(contacts) {
                     </tr>`;
         }
     )
+    undoHighlight();
 }
 
-function printMessages() {
-    undoPrintMessages();
-    const name = getValue('name');
-    const number = getValue('number');
-    const messages = validate(contacts, name, number).validationMessages;
-    const invalidData = validate(contacts, name, number).inputInvalid;
+function printMessage(message) {
     const messagesDisplay = document.getElementById('messagesDisplay');
-
-    highlight(contacts, invalidData);
-
-    for (const message in messages) {
-        // console.log(messages[message]);
-        messagesDisplay.innerHTML += `<p class="message">${messages[message]}</p>`
-    }
+    messagesDisplay.innerHTML += `<p class="message">${message}</p>`
 }
 
-function undoPrintMessages() {
+function undoPrintMessage() {
     const messagesDisplay = document.getElementById('messagesDisplay');
     while (messagesDisplay.firstChild) {
         messagesDisplay.removeChild(messagesDisplay.firstChild);
     }
 }
 
+function highlight(element) {
+    contacts.forEach( contact => {
+        const printedContacts = document.querySelectorAll('.contact');
+        const indexContact = contacts.indexOf(contact);
+        const printedName = printedContacts[indexContact].querySelector('.name');
+        const printedNumber = printedContacts[indexContact].querySelector('.number');
+        if (contact.name === element) {
+            printedName.classList.add('highlight');
+        } 
+        if (contact.number === element) {
+            printedNumber.classList.add('highlight');
+        }
+    })
+}
+
+function undoHighlight() {
+    const printedContacts = document.querySelectorAll('.contact');
+    printedContacts.forEach(contact => {
+        const data = contact.querySelectorAll('*');
+        for (let i = 0; i < data.length; i++) {
+            let dataClassList = data[i].classList;
+            dataClassList.remove('highlight');
+        }
+    })
+}
+
 function addSubmitButtonListener(contacts) {
     const submitButton = document.getElementById('submitButton');
-    submitButton.addEventListener('click', printMessages);
+    submitButton.addEventListener('click', readValidationResultAndRun);
 }
 
 loadContacts();
 renderTable(contacts);
 addSubmitButtonListener();
+
 
 
 
