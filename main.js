@@ -11,6 +11,8 @@ function validate(contacts, formName, formNumber) {
     const invalidName = allNames.filter(name => name === formName);
     const invalidNumber = allNumber.filter(number => number === formNumber);
     const validationResult = {};
+    // console.log(formName.length);
+    // console.log(formNumber.length);
     if (invalidName.length) {
         validationResult.invalidName = invalidName[0];
     }
@@ -21,7 +23,7 @@ function validate(contacts, formName, formNumber) {
 }
 
 function readValidationResultAndRun() {
-    undoPrintMessage();
+    closeMessage();
     renderTable(contacts);
     const name = getValue('name');
     const number = getValue('number');
@@ -30,8 +32,7 @@ function readValidationResultAndRun() {
     const invalidNumber = validationResult.invalidNumber;
     if (Object.keys(validationResult).length > 0) {
         if (invalidName && invalidNumber) {
-            printMessage(`O nome ${invalidName} já existe`);
-            printMessage(`O número ${invalidNumber} já existe`);
+            printMessage(`O nome ${invalidName} e o número ${invalidNumber} já existem`);
             highlight(invalidName);
             highlight(invalidNumber);
         } else if (invalidName) {
@@ -78,10 +79,23 @@ function renderTable(contacts) {
 
 function printMessage(message) {
     const messagesDisplay = document.getElementById('messagesDisplay');
-    messagesDisplay.innerHTML += `<p class="message">${message}</p>`
+    const closeButtonId = 'closeButton';
+    messagesDisplay.innerHTML += 
+    `<p class="message">${message}</p>
+    <button id="${closeButtonId}">
+    <img src="./icons/close_button.svg" alt="Fechar Mensagem">
+    </button>`
+    messagesDisplay.style.display = "flex";
+    // closeButton.addEventListener('click', closeMessage);
+    addCloseMessageListener(closeButtonId);
 }
 
-function undoPrintMessage() {
+function addCloseMessageListener(closeButtonId) {
+    const closeButton = document.getElementById(closeButtonId);
+    closeButton.addEventListener('click', closeMessage);
+}
+
+function closeMessage() {
     const messagesDisplay = document.getElementById('messagesDisplay');
     while (messagesDisplay.firstChild) {
         messagesDisplay.removeChild(messagesDisplay.firstChild);
@@ -122,6 +136,7 @@ function addSubmitButtonListener(contacts) {
 loadContacts();
 renderTable(contacts);
 addSubmitButtonListener();
+
 
 
 

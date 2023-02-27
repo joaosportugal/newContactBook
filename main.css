@@ -5,6 +5,16 @@
     --verde-escuro: #096c47;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0;}
+    to { opacity: 1;}
+}
+
+@keyframes fadeOut {
+    from { opacity: 1;}
+    to { opacity: 0;}
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -121,23 +131,22 @@ table tbody td {
 }
 
 #messagesDisplay {
-    display: flex;
-    flex-direction: column;
+    display: none;
+    animation: fadeIn 1s;
+    align-items: center;
+    border-radius: .5em;
+    justify-content: space-between;
+    width: fit-content;
+    margin: 0 auto;
+    padding-left: .8em;
+    background-color: var(--amarelo-escuro);
 }
 
 .message {
-    display: flex;
     color: var(--verde-escuro);
     font-weight: bold;
-    justify-content: center;
-    width: 50%;
-    margin: 0 auto;
-    margin-bottom: 1em;
-    text-align: center;
+    margin-right: 1em;
     padding: .5em;
-    background-color: var(--amarelo-escuro);
-    border-radius: .5em;
-    
 }
 
 #contactList {
@@ -160,4 +169,22 @@ table tbody td {
     color: var(--verde-escuro);
     background-color: var(--amarelo-escuro);
     font-weight: bold;
+}
+
+#closeButton {
+    padding: .3em;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    transition: 200ms;
+}
+
+#closeButton img {
+    height: 20px;
+    margin-right: 4px;
+}
+
+#closeButton:hover {
+    transform: scale(1.1);
 }
