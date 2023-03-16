@@ -32,40 +32,54 @@ function addNewContact() {
 
     if (Object.keys(validationResult).length === 0) {
         contacts.push(newContact);
-        showMessage(successMessage);
+        renderTable(contacts);
+        cleanAndHideMessageBox();
+        generateMessage(validationResult);
+        showMessage();
     } else {
-        showMessage(validationResult);
+        cleanAndHideMessageBox();
+        generateMessage(validationResult);
+        showMessage();
     }
-}
-function generateMessage(validation) {
-    const errorMessages = [];
-    for (const error in validation) {
-        errorMessages.push(`${validation[error]} já existe`);
-    }
-    return errorMessages
 }
 
-function showMessage(message) {
-    const allMessages = generateMessage(message);
+function generateMessage(validationResult) {
+    const errorMessages = {
+        nameError: `O nome ${validationResult["nameError"]} já existe`,
+        numberError: `O número ${validationResult["numberError"]} já existe`,
+        emailError: `O e-mail ${validationResult["emailError"]} já existe`,
+        cepError: `O cep ${validationResult["cepError"]} já existe`
+    }
+    const selectedMessages = [];
+
+    if (Object.values(validationResult).length > 0) {
+        for (const prop in errorMessages) {
+            if (prop in validationResult) {
+                selectedMessages.push(errorMessages[prop]);
+            }
+        }
+    } else {
+        selectedMessages.push("O novo contato foi adicionado com sucesso");
+    }
+
+    for (let i = 0; i < selectedMessages.length; i++) {
+        messagesDisplay.innerHTML += `<p class="message">${selectedMessages[i]}</p>`;
+    }
+
+    return selectedMessages
+}
+
+function showMessage() {
     const messagesDisplay = document.getElementById('messagesDisplay');
     messagesDisplay.style.display = "flex";
-    for (let i = 0; i < allMessages.length; i++) {
-        messagesDisplay.innerHTML += `<p class="message">${allMessages[i]}</p>`;
-        console.log(allMessages[i]);
-    }
-    
+    messagesDisplay.classList.add('show');
 }
 
-// function printMessage(message) {
-//     const messagesDisplay = document.getElementById('messagesDisplay');
-//     const closeButtonId = 'closeButton';
-//     messagesDisplay.innerHTML += 
-//     `<p class="message">${message}</p>
-//     <button id="${closeButtonId}">
-//     <img src="./icons/close_button.svg" alt="Fechar Mensagem">
-//     </button>`
-//     messagesDisplay.style.display = "flex";
-// }
+function cleanAndHideMessageBox() {
+    const messagesDisplay = document.getElementById('messagesDisplay');
+    messagesDisplay.style.display = "none";
+    messagesDisplay.innerHTML = "";
+}
 
 function loadContacts() {
     contacts = [
@@ -99,8 +113,8 @@ function renderTable(contacts) {
                 `<tr class= "contact">
                         <td class= "name">${name}</td>
                         <td class= "number">${number}</td>
-                        <td class= "number">${email}</td>
-                        <td class= "number">${cep}</td>
+                        <td class= "email">${email}</td>
+                        <td class= "cep">${cep}</td>
                     </tr>`;
         }
     )
@@ -111,6 +125,14 @@ function addSubmitButtonListener() {
     submitButton.addEventListener('click', addNewContact);
 }
 
+
+
 loadContacts();
 renderTable(contacts);
 addSubmitButtonListener();
+
+document.getElementById('messagesDisplay').addEventListener('input', function() {
+    console.log('olá mundo');
+    // const tableMove = document.getElementById("tableMove");
+    // tableMove.style.animation = "3s ease-in 1s infinite reverse both running slidein"
+});

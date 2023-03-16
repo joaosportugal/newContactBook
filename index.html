@@ -7,39 +7,51 @@
     <title>Contact Book</title>
 
     <link rel="stylesheet" href="./main.css">
-
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        
+
         <header>
             <h1>Agenda de Contatos</h1>
-            <p id="userName">Bem-vindo(a)</p>
+            <p class="generalSubtitles" id="userName">Bem-vindo(a)</p>
         </header>
 
-        <form action="">
-            <input id="name" type="text" required placeholder="Nome do Contato" value="Bruno">
-            <input id="number" type="number" required placeholder="Telefone" value="22222222">
-            <input id="email" type="email" required placeholder="E-mail" value="brunoreis@gmail.com">
-            <input id="cep" type="text" required placeholder="Telefone" value="09.099-94">
-            <button id="submitButton" type="button">Adicionar</button>
+        <form>
+            <div class="grid-container">
+                <div class="item-1">
+                    <label class="generalSubtitles" for="name">Nome Completo</label>
+                    <input id="name" type="text" required value="Bruno">
+                </div>
+                <div class="item-2">
+                    <label class="generalSubtitles" for="number">Telefone</label>
+                    <input id="number" type="number" required  value="22222222">
+                </div>
+                <div class="item-3">
+                    <label class="generalSubtitles" for="email">E-mail</label>
+                    <input id="email" type="email" required value="brunoreis@gmail.com">
+                </div>
+                <div class="item-4">
+                    <label class="generalSubtitles" for="cep">CEP</label>
+                    <input id="cep" type="text" required value="09.099-94">
+                </div>
+                <div class="item-5">
+                    <button id="submitButton" type="button">Adicionar</button>
+                </div>
+                
+            </div>
         </form>
-        
-        <!-- <p id="nameErrorMessage" class="message"></p>
-        <p id="numberErrorMessage" class="message"></p> -->
 
-        <div id="messagesDisplay">
-            <!-- <button id="closeButton"><img src="./icons/close_button.svg" alt="Fechar Mensagem"></button> -->
+        <div id="messagesDisplay" class="messagesDisplay">
         </div>
 
-        <table cellspacing="0">
+        <table cellspacing="0" id="tableMove">
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>Telefone</th>
-                    <th>Email</th>
-                    <th>CEP</th>
+                    <th id="emailTable">Email</th>
+                    <th id="cepTable">CEP</th>
                 </tr>
             </thead>
             

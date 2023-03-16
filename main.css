@@ -3,11 +3,19 @@
     --amarelo-escuro: #eac100;
     --verde-claro: #0b8457;
     --verde-escuro: #096c47;
+    --titulos: 'Montserrat', sans-serif;
+    --textoComum: 'Roboto', sans-serif;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0;}
-    to { opacity: 1;}
+    from { 
+        opacity: 0;
+        scale: 0;
+    }
+    to { 
+        opacity: 1;
+        scale: 1;
+    }
 }
 
 @keyframes fadeOut {
@@ -19,57 +27,80 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    color: var(--verde-escuro);
-    font-family: 'Montserrat', sans-serif;
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--textoComum);
+    list-style: none;
 }
 
 body {
     background-color: var(--cor-de-fundo);
-    margin-top: 2em;
 }
 
 .container {
-    max-width: 80vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    max-width: 100vh;
     width: 100%;
-    min-width: 380px;
+    height: 100vh;
     margin: 0 auto;
 }
 
 header {
-    margin-bottom: 1em;
     text-align: center;
 }
 
 header h1 {
-    
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--titulos);
+    color: var(--verde-escuro);
     font-size: 56px;
     font-weight: bold;
 }
 
 #userName {
-    display: inline-block;
-    background-color: var(--verde-claro);
-    color: var(--cor-de-fundo);
-    padding: .2em .6em;
-    border-radius: .5em;
-    font-family: 'Roboto', sans-serif;
     font-size: 20px;
 }
 
+.generalSubtitles {
+    color: var(--verde-claro);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+label {
+    font-size: 16px;
+}
+
+input {
+    margin-top: .4em;
+}
+
 form {
-    width: 80%;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1em;
-    align-items: center;
-    margin-bottom: 1em;
+    width: 100%;
+    margin: 16px 0;
+}
+
+.item-1 {grid-area: nomeInput;}
+.item-2 {grid-area: numeroinput;}
+.item-3 {grid-area: cepInput;}
+.item-4 {grid-area: emailInput;}
+
+.item-5 {
+    grid-area: botao;
+    text-align: center;}
+
+form .grid-container {
+    display: grid;
+    grid-template-areas: 
+    'nomeInput numeroinput numeroinput'
+    'emailInput cepInput cepInput'
+    'botao botao botao';
+    grid-gap: 1em;
 }
 
 form input, form button {
+    font-weight: bold;
+    font-size: 16px;
+    width: 100%;
     outline: var(--verde-escuro);
     border-color: var(--verde-escuro);
     padding: .4em;
@@ -77,6 +108,7 @@ form input, form button {
 }
 
 form button {
+    width: 40%;
     background-color: var(--verde-escuro);
     color: var(--cor-de-fundo);
     cursor: pointer;
@@ -84,13 +116,6 @@ form button {
 
 form button:hover {
     background-color: var(--verde-claro);
-}
-
-
-form input::placeholder {
-    color: var(--verde-escuro);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -103,49 +128,49 @@ input[type="number"] {
 }
 
 table {
+    position: relative;
     background-color: var(--verde-claro);
     border-radius: 1em;
-    padding: 1em;
-    min-width: 290px;
-    width: 50%;
-    margin: 1em auto;
-    text-align: center;
+    padding: 2em;
+    width: 100%;
+    min-height: fit-content;
+    text-align: start;
+    margin-top: 16px;
 }
 
 table thead th {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--titulos);
     font-size: 18px;
     font-weight: bold;
     color: var(--cor-de-fundo);
     border-bottom: 2px solid var(--cor-de-fundo);
-    padding: .3em;
+    padding: 0 .3em .3em 0;
+    text-align: start;
 }
 
 table thead tr {
     padding: 1em;
 }
 
-table tbody td {
-    padding: .3em 1em;
+table tbody td{
     color: var(--cor-de-fundo);
+    padding-top: .5em;
 }
 
 #messagesDisplay {
+    width: fit-content;
     display: none;
-    animation: fadeIn 1s;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     border-radius: .5em;
     justify-content: space-between;
-    width: fit-content;
     margin: 0 auto;
-    padding-left: .8em;
     background-color: var(--amarelo-escuro);
 }
 
 .message {
     color: var(--verde-escuro);
     font-weight: bold;
-    margin-right: 1em;
     padding: .5em;
 }
 
@@ -187,4 +212,32 @@ table tbody td {
 
 #closeButton:hover {
     transform: scale(1.1);
+}
+
+@media screen and (max-width: 767px) {
+    .container {
+        width: 70vw;
+        margin: 0 auto;
+    }
+    form .grid-container {
+        display: block;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    form button {
+        width: 100%;
+        margin-top: 1em;
+    }
+
+    table {
+        max-width: 100%;
+    }
+
+    table #emailTable,
+    table #cepTable,
+    tbody .email,
+    tbody .cep {
+        display: none;
+    }
 }
