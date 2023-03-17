@@ -23,7 +23,6 @@ function validate(formValue) {
         for (const prop in formValue) {
             if (contact[prop] === formValue[prop]) {
                 validationResult.success = false;
-                validationResult[`${prop}Error`] = formValue[prop];
                 validationResult.errors.push(
                     {
                         field: prop,
@@ -34,7 +33,6 @@ function validate(formValue) {
             }
         }
     })
-    console.log(validationResult);
     return validationResult
 }
 
@@ -56,22 +54,43 @@ function addNewContact() {
 }
 
 function generateMessage(validationResult) {
-    const errorMessages = {
-        nameError: `O nome ${validationResult["nameError"]} já existe`,
-        numberError: `O número ${validationResult["numberError"]} já existe`,
-        emailError: `O e-mail ${validationResult["emailError"]} já existe`,
-        cepError: `O cep ${validationResult["cepError"]} já existe`
-    }
+    const errorsArray = validationResult.errors;
     const messages = [];
+
+    function getErrorMessage(errorType, fieldName, fieldValue) {
+        const errorMessagesList = {
+            repetitionError: {
+                name: `O nome ${fieldValue} já existe`,
+                number: `O número ${fieldValue} já existe`,
+                email: `O email ${fieldValue} já existe`,
+                cep: `O cep já ${fieldValue} existe`
+            },
+            emptyFieldError: {
+                name: `O campo ${fieldName} deve ser preenchido`,
+                number: `O campo ${fieldName} deve ser preenchido`,
+                email: `O campo ${fieldName} deve ser preenchido`,
+                cep: `O campo ${fieldName} deve ser preenchido`
+            }
+        };
+
+        const errorMessages = errorMessagesList[errorType];
+
+        return errorMessages[fieldName] || '';
+    }
 
     if (validationResult.success) {
         messages.push("O novo contato foi adicionado com sucesso");
     } else {
-        for (const prop in errorMessages) {
-            if (prop in validationResult) {
-                messages.push(errorMessages[prop]);
+        errorsArray.forEach(error => {
+            if (error.type === 'repetitionError') {
+                const repetitionErrorMessage = getErrorMessage('repetitionError', error.field, error.value);
+                messages.push(repetitionErrorMessage);
             }
-        }
+            if (error.type === 'emptyFieldError') {
+                const emptyFieldErrorMessage = getErrorMessage('emptyFieldError', error.field, error.value);
+                messages.push(emptyFieldErrorMessage);
+            }
+        })
     }
 
     for (let i = 0; i < messages.length; i++) {
@@ -80,6 +99,7 @@ function generateMessage(validationResult) {
 
     return messages
 }
+
 
 function showMessage() {
     const messagesDisplay = document.getElementById('messagesDisplay');
