@@ -60,6 +60,14 @@ header h1 {
     font-size: 20px;
 }
 
+.warningLabel {
+    color: red;
+}
+
+.warningBox {
+    border: 2px solid red;
+}
+
 .generalSubtitles {
     color: var(--verde-claro);
     font-size: 16px;
@@ -101,11 +109,13 @@ form input, form button {
     font-weight: bold;
     font-size: 16px;
     width: 100%;
-    outline: var(--verde-escuro);
-    border-color: var(--verde-escuro);
+    outline: none;
+    border: 2px solid var(--verde-escuro);
     padding: .4em;
     border-radius: .5em;
 }
+
+
 
 form button {
     width: 40%;
