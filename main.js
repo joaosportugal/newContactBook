@@ -19,20 +19,48 @@ function validate(formValue) {
         success: true,
         errors: []
     };
-    contacts.forEach(contact => {
-        for (const prop in formValue) {
-            if (contact[prop] === formValue[prop]) {
+    
+    function findRepetitionError() {
+        contacts.forEach(contact => {
+            for (const prop in formValue) {
+                if (contact[prop] === formValue[prop]) {
+                    validationResult.success = false;
+                    validationResult.errors.push(
+                        {
+                            field: prop,
+                            value: formValue[prop],
+                            type: 'repetitionError'
+                        }
+                    )
+                }
+            }
+        })
+    }
+
+    function findEmptyFieldError() {
+        const formDivs = document.querySelector('.formDivs');
+        const formInputs = formDivs.querySelectorAll('input');
+        const inputIds = [];
+        formInputs.forEach(input => {
+            inputIds.push(input.id);
+        })
+        
+        for (let i = 0; i < inputIds.length; i++ ) {
+            if (getValue(inputIds[i]).length === 0) {
                 validationResult.success = false;
                 validationResult.errors.push(
                     {
-                        field: prop,
-                        value: formValue[prop],
-                        type: 'repetitionError'
+                        field: inputIds[i],
+                        value: undefined,
+                        type: 'emptyFieldError'
                     }
                 )
             }
         }
-    })
+    }
+
+    findRepetitionError();
+    findEmptyFieldError();
     return validationResult
 }
 
