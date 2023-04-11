@@ -1,4 +1,5 @@
 let contacts = [];
+let validationResultMessages = [];
 
 function getValue(fieldName) {
     return document.getElementById(fieldName).value;
@@ -15,32 +16,43 @@ function getNewContact() {
 }
 
 function validate(newContact) {
-    const validationResult = {};
+    const validationResult = {
+        success: true,
+        errors: []
+    };
     contacts.forEach(contact => {
         for (const prop in newContact) {
             if (contact[prop] === newContact[prop]) {
-                validationResult[`${prop}Error`] = newContact[prop];
+                validationResult.success = false;
+                validationResult.errors.push(
+                    {
+                        field: prop,
+                        value: newContact[prop],
+                        type: 'repetitionError'
+                    }
+                )
             }
         }
     })
     return validationResult
 }
 
+function renderMessage(validationResult) {
+    cleanAndHideMessageBox();
+    generateMessage(validationResult);
+    showMessage();
+}
+
 function addNewContact() {
     const newContact = getNewContact();
     const validationResult = validate(newContact);
-
-    if (Object.keys(validationResult).length === 0) {
+    validationResultMessages = generateMessages(validationResult)
+    if (validationResult.success) {
         contacts.push(newContact);
         renderTable(contacts);
-        cleanAndHideMessageBox();
-        generateMessage(validationResult);
-        showMessage();
-    } else {
-        cleanAndHideMessageBox();
-        generateMessage(validationResult);
-        showMessage();
-    }
+    } 
+    renderValidationResult(validationResult)
+    
 }
 
 function generateMessage(validationResult) {
@@ -50,23 +62,23 @@ function generateMessage(validationResult) {
         emailError: `O e-mail ${validationResult["emailError"]} já existe`,
         cepError: `O cep ${validationResult["cepError"]} já existe`
     }
-    const selectedMessages = [];
+    const messages = [];
 
-    if (Object.values(validationResult).length > 0) {
+    if (validationResult.success) {
+        messages.push("O novo contato foi adicionado com sucesso");
+    } else {
         for (const prop in errorMessages) {
             if (prop in validationResult) {
-                selectedMessages.push(errorMessages[prop]);
+                messages.push(errorMessages[prop]);
             }
         }
-    } else {
-        selectedMessages.push("O novo contato foi adicionado com sucesso");
     }
 
-    for (let i = 0; i < selectedMessages.length; i++) {
-        messagesDisplay.innerHTML += `<p class="message">${selectedMessages[i]}</p>`;
+    for (let i = 0; i < messages.length; i++) {
+        messagesDisplay.innerHTML += `<p class="message">${messages[i]}</p>`;
     }
 
-    return selectedMessages
+    return messages
 }
 
 function showMessage() {

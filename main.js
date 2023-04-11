@@ -4,61 +4,163 @@ function getValue(fieldName) {
     return document.getElementById(fieldName).value;
 }
 
-function validate(contacts, formName, formNumber) {
-    contacts = Array.from(contacts);
-    const allNames = contacts.map(contact => contact.name)
-    const allNumber = contacts.map(contact => contact.number)
-    const invalidName = allNames.filter(name => name === formName);
-    const invalidNumber = allNumber.filter(number => number === formNumber);
-    const validationResult = {};
-    // console.log(formName.length);
-    // console.log(formNumber.length);
-    if (invalidName.length) {
-        validationResult.invalidName = invalidName[0];
+function getNewContact() {
+    const formValue = { 
+        name: getValue('name'),
+        number: getValue('number'),
+        email: getValue('email'),
+        cep: getValue('cep')
     }
-    if (invalidNumber.length) {
-        validationResult.invalidNumber = invalidNumber[0];
+    return formValue
+}
+
+function validate(formValue) {
+    const validationResult = {
+        success: true,
+        errors: []
+    };
+    
+    function findRepetitionError() {
+        contacts.forEach(contact => {
+            for (const prop in formValue) {
+                if (contact[prop] === formValue[prop]) {
+                    validationResult.success = false;
+                    validationResult.errors.push(
+                        {
+                            field: prop,
+                            value: formValue[prop],
+                            type: 'repetitionError'
+                        }
+                    )
+                }
+            }
+        })
     }
+
+    function findEmptyFieldError() {
+        const formDivs = document.querySelector('.formDivs');
+        const formInputs = formDivs.querySelectorAll('input');
+        const inputIds = [];
+        formInputs.forEach(input => {
+            inputIds.push(input.id);
+        })
+        
+        for (let i = 0; i < inputIds.length; i++ ) {
+            if (getValue(inputIds[i]).length === 0) {
+                validationResult.success = false;
+                validationResult.errors.push(
+                    {
+                        field: inputIds[i],
+                        value: undefined,
+                        type: 'emptyFieldError'
+                    }
+                )
+            }
+        }
+    }
+
+    findRepetitionError();
+    findEmptyFieldError();
     return validationResult
 }
 
-function readValidationResultAndRun() {
-    closeMessage();
-    renderTable(contacts);
-    const name = getValue('name');
-    const number = getValue('number');
-    const validationResult = validate(contacts, name, number);
-    const invalidName = validationResult.invalidName;
-    const invalidNumber = validationResult.invalidNumber;
-    if (Object.keys(validationResult).length > 0) {
-        if (invalidName && invalidNumber) {
-            printMessage(`O nome ${invalidName} e o número ${invalidNumber} já existem`);
-            highlight(invalidName);
-            highlight(invalidNumber);
-        } else if (invalidName) {
-            printMessage(`O nome ${invalidName} já existe`);
-            highlight(invalidName);
-        } else if (invalidNumber) {
-            printMessage(`O número ${invalidNumber} já existe`);
-            highlight(invalidNumber);
-        }
-    } else {
-        addContact(name, number);
-        printMessage('O contato foi adicionado com sucesso');
+function renderValidationResult(validationResult) {
+    cleanAndHideMessageBox();
+    generateMessage(validationResult);
+    showMessage();
+}
+
+function addNewContact() {
+    const formValue = getNewContact();
+    const validationResult = validate(formValue);
+    renderValidationResult(validationResult);
+
+    if (validationResult.success) {
+        contacts.push(formValue);
         renderTable(contacts);
     }
 }
 
-function addContact(formName, formNumber) {
-    const newContact = {name: formName, number: formNumber}
-    contacts.push(newContact);
+function generateMessage(validationResult) {
+    const errorsArray = validationResult.errors;
+    const messages = [];
+
+    function getErrorMessage(errorType, fieldName, fieldValue) {
+        const errorMessagesList = {
+            repetitionError: {
+                name: `O nome ${fieldValue} já existe`,
+                number: `O número ${fieldValue} já existe`,
+                email: `O email ${fieldValue} já existe`,
+                cep: `O cep já ${fieldValue} existe`
+            },
+            emptyFieldError: {
+                name: `O campo nome deve ser preenchido`,
+                number: `O campo telefone deve ser preenchido`,
+                email: `O campo email deve ser preenchido`,
+                cep: `O campo cep deve ser preenchido`
+            }
+        };
+
+        const errorMessages = errorMessagesList[errorType];
+
+        return errorMessages[fieldName] || '';
+    }
+
+    if (validationResult.success) {
+        messages.push("O novo contato foi adicionado com sucesso");
+    } else {
+        errorsArray.forEach(error => {
+            if (error.type === 'repetitionError') {
+                const repetitionErrorMessage = getErrorMessage('repetitionError', error.field, error.value);
+                messages.push(repetitionErrorMessage);
+            }
+            if (error.type === 'emptyFieldError') {
+                const emptyFieldErrorMessage = getErrorMessage('emptyFieldError', error.field, error.value);
+                messages.push(emptyFieldErrorMessage);
+            }
+        })
+    }
+
+    for (let i = 0; i < messages.length; i++) {
+        messagesDisplay.innerHTML += `<p class="message">${messages[i]}</p>`;
+    }
+
+    return messages
+}
+
+
+function showMessage() {
+    const messagesDisplay = document.getElementById('messagesDisplay');
+    messagesDisplay.style.display = "flex";
+    messagesDisplay.classList.add('show');
+}
+
+function cleanAndHideMessageBox() {
+    const messagesDisplay = document.getElementById('messagesDisplay');
+    messagesDisplay.style.display = "none";
+    messagesDisplay.innerHTML = "";
 }
 
 function loadContacts() {
     contacts = [
-        { name: "João", number: "1111111" },
-        { name: "Bruno", number: "22222222" },
-        { name: "Paulo", number: "3333333" },
+        { 
+            name: "João",
+            number: "1111111",
+            email: "joaosportugal@hotmail.com",
+            cep: "22.780-792"
+        },
+        { 
+            name: "Bruno",
+            number: "22222222",
+            email: 'brunoreis@gmail.com',
+            cep: '09.099-94'
+        },
+        { 
+            name: "Paulo",
+            number: "3333333",
+            email: 'paulo@yahoo.com.br',
+            cep: '22.792-780'
+        },
     ];
 }
 
@@ -66,78 +168,25 @@ function renderTable(contacts) {
     const contactList = document.getElementById('bodyTable');
     contactList.innerHTML = "";
     contacts.forEach(
-        ({ name, number }) => {
+        ({ name, number, email, cep }) => {
             contactList.innerHTML +=
                 `<tr class= "contact">
                         <td class= "name">${name}</td>
                         <td class= "number">${number}</td>
+                        <td class= "email">${email}</td>
+                        <td class= "cep">${cep}</td>
                     </tr>`;
         }
     )
-    undoHighlight();
 }
 
-function printMessage(message) {
-    const messagesDisplay = document.getElementById('messagesDisplay');
-    const closeButtonId = 'closeButton';
-    messagesDisplay.innerHTML += 
-    `<p class="message">${message}</p>
-    <button id="${closeButtonId}">
-    <img src="./icons/close_button.svg" alt="Fechar Mensagem">
-    </button>`
-    messagesDisplay.style.display = "flex";
-    // closeButton.addEventListener('click', closeMessage);
-    addCloseMessageListener(closeButtonId);
-}
-
-function addCloseMessageListener(closeButtonId) {
-    const closeButton = document.getElementById(closeButtonId);
-    closeButton.addEventListener('click', closeMessage);
-}
-
-function closeMessage() {
-    const messagesDisplay = document.getElementById('messagesDisplay');
-    while (messagesDisplay.firstChild) {
-        messagesDisplay.removeChild(messagesDisplay.firstChild);
-    }
-}
-
-function highlight(element) {
-    contacts.forEach( contact => {
-        const printedContacts = document.querySelectorAll('.contact');
-        const indexContact = contacts.indexOf(contact);
-        const printedName = printedContacts[indexContact].querySelector('.name');
-        const printedNumber = printedContacts[indexContact].querySelector('.number');
-        if (contact.name === element) {
-            printedName.classList.add('highlight');
-        } 
-        if (contact.number === element) {
-            printedNumber.classList.add('highlight');
-        }
-    })
-}
-
-function undoHighlight() {
-    const printedContacts = document.querySelectorAll('.contact');
-    printedContacts.forEach(contact => {
-        const data = contact.querySelectorAll('*');
-        for (let i = 0; i < data.length; i++) {
-            let dataClassList = data[i].classList;
-            dataClassList.remove('highlight');
-        }
-    })
-}
-
-function addSubmitButtonListener(contacts) {
+function addSubmitButtonListener() {
     const submitButton = document.getElementById('submitButton');
-    submitButton.addEventListener('click', readValidationResultAndRun);
+    submitButton.addEventListener('click', addNewContact);
 }
+
+
 
 loadContacts();
 renderTable(contacts);
 addSubmitButtonListener();
-
-
-
-
-

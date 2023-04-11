@@ -1,0 +1,16 @@
+[33m204e00b[m[33m ([m[1;36mHEAD -> [m[1;32mnewContactBook[m[33m, [m[1;31mnewContactBook/newContactBook[m[33m)[m melhora no estilo e otimização do cod CSS e funções
+[33m2b4cb4e[m redução e otimização da escrita das funções
+[33md751135[m[33m ([m[1;31morigin/version1.2[m[33m, [m[1;32mversion1.2[m[33m, [m[1;32mcloseErrorMessages[m[33m)[m inserido botao de fechar nas mensagens de erro
+[33ma68187c[m Merge branch 'version1.2' of https://github.com/joaosportugal/jam1 into version1.2
+[33m9ad2308[m[33m ([m[1;32mtestes[m[33m)[m alterado o fluxo das funções tornando-as mais objetivas && otimizado o processo de mensagens de erro e sucesso e o highlight para mensagens de erro
+[33m3d4cb52[m[33m ([m[1;32malterando_mensagens_de_erro[m[33m)[m início da simplificação da function validade e o fluxo de mensagens de sucesso e erro
+[33m3f36d2d[m Merge branch 'main' into version1.2
+[33m157fb42[m simplificada a função validate, alterada as funções showErrorMessages,readFormAndAddNewLine e criada a função cleanErrorMessages // Objetivo: mostrar mensagens de erro distintas re derro para cada dado repetido
+[33m23e74cb[m simplificada e otimizada a função highlight
+[33m7631f75[m[33m ([m[1;31morigin/refactoring[m[33m, [m[1;32mrefactoring[m[33m)[m alguns nomes foram substituídos para dar mais clareza // a função highlight foi escrita separada da função validate, bem como a função undoHighlight // foi retirada a função run
+[33m0e95794[m adicionada função de destacar os contatos já adicionados
+[33mfecff91[m next validation step commented
+[33md4a69d5[m show error message
+[33m4e3d91f[m validation
+[33m457f1e5[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m render table
+[33mda6e09f[m first commit
