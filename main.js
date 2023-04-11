@@ -68,7 +68,6 @@ function renderValidationResult(validationResult) {
     cleanAndHideMessageBox();
     generateMessage(validationResult);
     showMessage();
-    // errorHighlightLabelInput();
 }
 
 function addNewContact() {
@@ -135,63 +134,6 @@ function showMessage() {
     messagesDisplay.style.display = "flex";
     messagesDisplay.classList.add('show');
 }
-
-// //.warningLabel inclui a cor vermelha no texto do Label
-// // .warningBox inclui a cor vermelha no box do input
-
-// function errorHighlightLabelInput(validationResult) {
-//     const errorsArray = validationResult.errors;
-//     const messages = [];
-
-//     function getErrorMessage(errorType, fieldName, fieldValue) {
-//         const errorMessagesList = {
-//             repetitionError: {
-//                 name: `O nome ${fieldValue} já existe`,
-//                 number: `O número ${fieldValue} já existe`,
-//                 email: `O email ${fieldValue} já existe`,
-//                 cep: `O cep já ${fieldValue} existe`
-//             },
-//             emptyFieldError: {
-//                 name: `O campo ${fieldName} deve ser preenchido`,
-//                 number: `O campo ${fieldName} deve ser preenchido`,
-//                 email: `O campo ${fieldName} deve ser preenchido`,
-//                 cep: `O campo ${fieldName} deve ser preenchido`
-//             }
-//         };
-
-//         const errorMessages = errorMessagesList[errorType];
-
-//         return errorMessages[fieldName] || '';
-//     }
-
-//     if (validationResult.success) {
-//         messages.push("O novo contato foi adicionado com sucesso");
-//         messagesDisplay.innerHTML += `<p class="message">${messages[i]}</p>`;
-//     } else {
-//         errorsArray.forEach(error => {
-//             if (error.type === 'repetitionError') {
-//                 const repetitionErrorMessage = getErrorMessage('repetitionError', error.field, error.value);
-//                 messages.push(repetitionErrorMessage);
-//             }
-//             if (error.type === 'emptyFieldError') {
-//                 const emptyFieldErrorMessage = getErrorMessage('emptyFieldError', error.field, error.value);
-//                 messages.push(emptyFieldErrorMessage);
-//             }
-//         })
-//     }
-
-//     return messages
-// }
-
-// function showErrorHighlightLabelInput() {
-//     const formDivs = document.querySelector('.formDivs');
-//         const formInputs = formDivs.querySelectorAll('input');
-//         const inputIds = [];
-//         formInputs.forEach(input => {
-//             inputIds.push(input.id);
-//         })
-//         for (let i = 0; i < )
-// }
 
 function cleanAndHideMessageBox() {
     const messagesDisplay = document.getElementById('messagesDisplay');
